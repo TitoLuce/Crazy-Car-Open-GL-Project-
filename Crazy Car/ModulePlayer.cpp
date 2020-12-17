@@ -139,7 +139,7 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
 	{
-		acceleration = -MAX_ACCELERATION;
+		acceleration = -MAX_ACCELERATION / 2;
 	}
 
 	vehicle->ApplyEngineForce(acceleration);
