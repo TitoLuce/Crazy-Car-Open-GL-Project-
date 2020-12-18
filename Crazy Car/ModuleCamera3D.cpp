@@ -3,6 +3,7 @@
 #include "PhysBody3D.h"
 #include "PhysVehicle3D.h"
 #include "ModuleCamera3D.h"
+#include <cmath>
 
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled) {}
 
@@ -57,9 +58,15 @@ update_status ModuleCamera3D::Update(float dt)
 	//if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
 	//if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
 
+	vec3 EulerAngles = Quaternion2EulerAngles(&App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getRotation());
+	
 	
 	Reference = GetCMCoordinates();
+	X = rotate(vec3(1, 0, 0), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
+	Z = rotate(vec3(0, 0, 1), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
 	Position = Reference + Z * 50.0f;
+
+	
 	//Reference += newPos;
 
 	// Mouse motion ----------------
@@ -165,4 +172,35 @@ vec3 ModuleCamera3D::GetCMCoordinates()
 		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getY(),
 		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getZ()};
 	return a;
+}
+
+vec3  ModuleCamera3D::Quaternion2EulerAngles(btQuaternion* q0)
+{
+	struct Quaternion
+	{
+		float w, x, y, z;
+	}q;
+	vec3 angles;
+	q.w = q0->getW();
+	q.x = q0->getX();
+	q.y = q0->getZ();
+	q.z = q0->getY();
+	// roll (x-axis rotation)
+	double sinr_cosp = 2 * (q.w * q.x + q.y * q.z);
+	double cosr_cosp = 1 - 2 * (q.x * q.x + q.y * q.y);
+	angles.x = std::atan2(sinr_cosp, cosr_cosp);
+
+	// pitch (z-axis rotation)
+	double sinp = 2 * (q.w * q.y - q.z * q.x);
+	if (std::abs(sinp) >= 1)
+		angles.z = std::copysign(M_PI / 2, sinp); // use 90 degrees if out of range
+	else
+		angles.z = std::asin(sinp);
+
+	// yaw (y-axis rotation)
+	double siny_cosp = 2 * (q.w * q.z + q.x * q.y);
+	double cosy_cosp = 1 - 2 * (q.y * q.y + q.z * q.z);
+	angles.y = std::atan2(siny_cosp, cosy_cosp);
+
+	return angles;
 }
