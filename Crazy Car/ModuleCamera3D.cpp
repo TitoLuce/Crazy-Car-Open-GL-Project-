@@ -64,6 +64,7 @@ update_status ModuleCamera3D::Update(float dt)
 	Reference = GetCMCoordinates();
 	X = rotate(vec3(1, 0, 0), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
 	Z = rotate(vec3(0, 0, 1), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
+	//Y = rotate(vec3(0, 1, 0), EulerAngles.z * 90 / M_PI, vec3(0, 0, 1));
 	Position = Reference + Z * 50.0f;
 
 	
@@ -168,9 +169,9 @@ void ModuleCamera3D::CalculateViewMatrix()
 
 vec3 ModuleCamera3D::GetCMCoordinates()
 {
-	vec3 a = {App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getX(),
-		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getY(),
-		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getZ()};
+	vec3 a = { App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getX(),
+		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getY() + 10,
+		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getZ() };
 	return a;
 }
 

@@ -21,6 +21,10 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	void CreateRoad();
+
+	void CreateCurve(float angle, float radiusC, int type);
+
 public:
 	/*
 	PhysBody3D* pb_snake[MAX_SNAKE];
@@ -41,4 +45,9 @@ public:
 
 	PhysMotor3D* left_wheel;
 	PhysMotor3D* right_wheel;
+
+	p2DynArray<Primitive*> primitives;
+
+	float XPos = 0.0f;
+	float ZPos = 2.5f;
 };
