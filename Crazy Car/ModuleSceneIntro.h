@@ -21,9 +21,11 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
-	void CreateRoad();
+	//void CreateRoad();
 
-	void CreateCurve(float angle, float radiusC, int type);
+	//void CreateCurve(float angle, float radiusC, int type);
+
+	void CreateTrack();
 
 public:
 	/*
@@ -48,6 +50,6 @@ public:
 
 	p2DynArray<Primitive*> primitives;
 
-	float XPos = 0.0f;
-	float ZPos = 2.5f;
+	float XPos = -10.0f;
+	float ZPos = -100.0f;
 };
