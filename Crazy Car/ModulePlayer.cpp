@@ -155,5 +155,15 @@ update_status ModulePlayer::Update(float dt)
 	return UPDATE_CONTINUE;
 }
 
-
-
+float ModulePlayer::GetX()
+{
+	return vehicle->vehicle->getRigidBody()->getCenterOfMassPosition().x();
+};
+float ModulePlayer::GetY()
+{
+	return vehicle->vehicle->getRigidBody()->getCenterOfMassPosition().y();
+};
+float ModulePlayer::GetZ()
+{
+	return vehicle->vehicle->getRigidBody()->getCenterOfMassPosition().z();
+};

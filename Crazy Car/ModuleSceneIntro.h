@@ -4,6 +4,11 @@
 #include "Globals.h"
 #include "Primitive.h"
 
+#include "Color.h"
+#include <gl/GL.h>
+#include <gl/GLU.h>
+#include "glut/glut.h"
+
 #define MAX_SNAKE 2
 
 struct PhysBody3D;
@@ -16,6 +21,7 @@ public:
 	~ModuleSceneIntro();
 
 	bool Start();
+	update_status PreUpdate(float dt);
 	update_status Update(float dt);
 	bool CleanUp();
 
@@ -26,6 +32,18 @@ public:
 	//void CreateCurve(float angle, float radiusC, int type);
 
 	void CreateTrack();
+
+	void PrintText(float x, float y, float z, Color color, const char* string)
+	{
+		glColor3f(color.r, color.g, color.b);
+		glRasterPos3f(x, y, z);
+		int len, i;
+		len = (int)strlen(string);
+		for (i = 0; i < len; ++i)
+		{
+			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+		}
+	}
 
 public:
 	/*
@@ -52,4 +70,12 @@ public:
 
 	float XPos = -10.0f;
 	float ZPos = -100.0f;
+
+	float seconds;
+	int laps;
+
+	char timer[10] = { "\0" };
+	char lap[10] = { "\0" };
+
+	bool win;
 };

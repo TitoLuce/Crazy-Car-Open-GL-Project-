@@ -19,8 +19,12 @@ bool ModuleSceneIntro::Start()
 
 	//App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
 	//App->camera->LookAt(vec3(0, 0, 0));
-	//CreateRoad();
-	//CreateCurve(9, 35, 1);
+	App->audio->PlayMusic("Assets/Subnautica Soundtrack - Abandon ship [Extended mix].wav");
+
+	seconds = 300;
+	laps = 1;
+	win = false;
+
 	CreateTrack();
 
 	return ret;
@@ -34,7 +38,13 @@ bool ModuleSceneIntro::CleanUp()
 	return true;
 }
 
-// Update
+update_status ModuleSceneIntro::PreUpdate(float dt)
+{
+	if (seconds > 0 && !win) { seconds -= dt; }
+
+	return UPDATE_CONTINUE;
+}
+
 update_status ModuleSceneIntro::Update(float dt)
 {
 	Plane p(0, 1, 0, 0);
@@ -46,6 +56,18 @@ update_status ModuleSceneIntro::Update(float dt)
 		primitives[i]->Update();
 		primitives[i]->Render();
 	}
+
+	//PrintText(App->player->GetX(), App->player->GetY() + 7.0f, App->player->GetZ(), White, "TIME:");
+
+	sprintf_s(timer, 10, "Time: %03d", (int)seconds);
+	sprintf_s(lap, 10, "Lap: %d/3", laps);
+	if (seconds > 0)
+	{
+		PrintText(App->player->GetX(), App->player->GetY() + 35.0f, App->player->GetZ(), White, timer);
+		PrintText(App->player->GetX(), App->player->GetY() + 32.0f, App->player->GetZ(), White, lap);
+	}
+	else { PrintText(App->player->GetX(), App->player->GetY() + 33.0f, App->player->GetZ(), White, "GAME OVER"); }
+	
 
 	return UPDATE_CONTINUE;
 }

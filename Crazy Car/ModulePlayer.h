@@ -19,6 +19,10 @@ public:
 	update_status Update(float dt);
 	bool CleanUp();
 
+	float GetX();
+	float GetY();
+	float GetZ();
+
 public:
 
 	PhysVehicle3D* vehicle;
