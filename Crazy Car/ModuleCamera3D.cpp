@@ -5,6 +5,7 @@
 #include "ModuleCamera3D.h"
 #include <cmath>
 
+
 ModuleCamera3D::ModuleCamera3D(Application* app, bool start_enabled) : Module(app, start_enabled) {}
 
 ModuleCamera3D::~ModuleCamera3D()
@@ -16,6 +17,9 @@ bool ModuleCamera3D::Start()
 	LOG("Setting up the camera");
 	bool ret = true;
 
+	zoom = 5;
+	angle = 15;
+	camMode = 1;
 
 	CalculateViewMatrix();
 
@@ -43,33 +47,51 @@ update_status ModuleCamera3D::Update(float dt)
 	// Implement a debug camera with keys and mouse
 	// Now we can make this movememnt frame rate independant!
 
-	//vec3 newPos(0,0,0);
 	float speed = 3.0f * dt;
 	if(App->input->GetKey(SDL_SCANCODE_LSHIFT) == KEY_REPEAT)
 		speed = 8.0f * dt;
 
-	//if(App->input->GetKey(SDL_SCANCODE_R) == KEY_REPEAT) newPos.y += speed;
-	//if(App->input->GetKey(SDL_SCANCODE_F) == KEY_REPEAT) newPos.y -= speed;
-
-	//if(App->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) newPos -= Z * speed;
-	//if(App->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) newPos += Z * speed;
-
-
-	//if(App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) newPos -= X * speed;
-	//if(App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) newPos += X * speed;
+	if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+	{
+		if (camMode == 1)
+		{
+			camMode = 2;
+		}
+		else
+		{
+			camMode = 1;
+		}
+	}
 
 	vec3 EulerAngles = Quaternion2EulerAngles(&App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getRotation());
 	
 	
 	Reference = GetCMCoordinates();
+
 	X = rotate(vec3(1, 0, 0), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
 	Z = rotate(vec3(0, 0, 1), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
-	//Y = rotate(vec3(0, 1, 0), EulerAngles.z * 90 / M_PI, vec3(0, 0, 1));
+	Y = rotate(vec3(0, 1, 0), EulerAngles.y * 180 / M_PI, vec3(0, 1, 0));
+
+	X = rotate(X, 180, vec3(0, 1, 0));
+	Y = rotate(Y, 180, vec3(0, 1, 0));
+	Z = rotate(Z, 180, vec3(0, 1, 0));
+
+	if (camMode == 1)
+	{
+		zoom = 5;
+		angle = 15;
+	}
+	else if (camMode == 2)
+	{
+		zoom = 200;
+		angle = 90;
+	}
+
+	Y = rotate(Y, -angle, X);
+	Z = rotate(Z, -angle, X);
+
 	Position = Reference + Z * 50.0f;
-
 	
-	//Reference += newPos;
-
 	// Mouse motion ----------------
 
 	if(App->input->GetMouseButton(SDL_BUTTON_RIGHT) == KEY_REPEAT)
@@ -108,6 +130,7 @@ update_status ModuleCamera3D::Update(float dt)
 	}
 
 	// Recalculate matrix -------------
+
 	CalculateViewMatrix();
 
 	return UPDATE_CONTINUE;
@@ -170,8 +193,8 @@ void ModuleCamera3D::CalculateViewMatrix()
 vec3 ModuleCamera3D::GetCMCoordinates()
 {
 	vec3 a = { App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getX(),
-		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getY() + 10,
-		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getZ() };
+		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getY() + zoom,
+		App->player->vehicle->vehicle->getRigidBody()->getWorldTransform().getOrigin().getZ()};
 	return a;
 }
 

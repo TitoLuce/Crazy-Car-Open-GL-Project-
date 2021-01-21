@@ -28,7 +28,9 @@ private:
 	void CalculateViewMatrix();
 
 public:
-	
+	int zoom;
+	int camMode;
+	int angle;
 	vec3 X, Y, Z, Position, Reference;
 
 private:

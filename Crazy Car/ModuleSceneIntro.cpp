@@ -17,8 +17,6 @@ bool ModuleSceneIntro::Start()
 	LOG("Loading Intro assets");
 	bool ret = true;
 
-	//App->camera->Move(vec3(1.0f, 1.0f, 1.0f));
-	//App->camera->LookAt(vec3(0, 0, 0));
 	App->audio->PlayMusic("Assets/Subnautica Soundtrack - Abandon ship [Extended mix].wav");
 
 	seconds = 300;
@@ -63,10 +61,10 @@ update_status ModuleSceneIntro::Update(float dt)
 	sprintf_s(lap, 10, "Lap: %d/3", laps);
 	if (seconds > 0)
 	{
-		PrintText(App->player->GetX(), App->player->GetY() + 35.0f, App->player->GetZ(), White, timer);
-		PrintText(App->player->GetX(), App->player->GetY() + 32.0f, App->player->GetZ(), White, lap);
+		PrintText(App->player->GetX(), App->player->GetY() + 25.0f, App->player->GetZ(), White, timer);
+		PrintText(App->player->GetX(), App->player->GetY() + 22.0f, App->player->GetZ(), White, lap);
 	}
-	else { PrintText(App->player->GetX(), App->player->GetY() + 33.0f, App->player->GetZ(), White, "GAME OVER"); }
+	else { PrintText(App->player->GetX(), App->player->GetY() + 23.0f, App->player->GetZ(), White, "GAME OVER"); }
 	
 
 	return UPDATE_CONTINUE;
