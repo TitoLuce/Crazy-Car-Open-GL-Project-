@@ -27,6 +27,11 @@ public:
 
 	void OnCollision(PhysBody3D* body1, PhysBody3D* body2);
 
+	void CreatePendulum(const float& x, const float& z);
+
+	void CreateRamp(const float& x, const float& y, const float& z, const float& inclination, const float& rotation);
+
+	void Angles2AxisAngle(const float& alpha_x, const float& beta_y, vec3& u, float& angle);
 	//void CreateRoad();
 
 	//void CreateCurve(float angle, float radiusC, int type);
@@ -78,4 +83,8 @@ public:
 	char lap[10] = { "\0" };
 
 	bool win;
+
+	p2DynArray <Cube*> map;
+	p2DynArray<Sphere*> pendulumBall_shape;
+	p2DynArray<PhysBody3D*> pendulumBall_body;
 };

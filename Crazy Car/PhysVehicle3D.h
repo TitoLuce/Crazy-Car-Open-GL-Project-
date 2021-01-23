@@ -24,6 +24,14 @@ struct VehicleInfo
 {
 	~VehicleInfo();
 	
+	vec3 rlantern_size;
+	vec3 rlantern_offset;
+	vec3 llantern_size;
+	vec3 llantern_offset;
+
+	vec3 cabin_size;
+	vec3 cabin_offset;
+
 	vec3 chassis_size;
 	vec3 chassis_offset;
 	float mass;

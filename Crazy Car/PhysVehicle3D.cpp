@@ -38,18 +38,52 @@ void PhysVehicle3D::Render()
 		wheel.Render();
 	}
 
+	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
+
 	Cube chassis(info.chassis_size.x, info.chassis_size.y, info.chassis_size.z);
 	vehicle->getChassisWorldTransform().getOpenGLMatrix(&chassis.transform);
-	btQuaternion q = vehicle->getChassisWorldTransform().getRotation();
+	
 	btVector3 offset(info.chassis_offset.x, info.chassis_offset.y, info.chassis_offset.z);
 	offset = offset.rotate(q.getAxis(), q.getAngle());
-
+	chassis.color = Red;
 	chassis.transform.M[12] += offset.getX();
 	chassis.transform.M[13] += offset.getY();
 	chassis.transform.M[14] += offset.getZ();
 
+	Cube llantern(info.llantern_size.x, info.llantern_size.y, info.llantern_size.z);
+	vehicle->getChassisWorldTransform().getOpenGLMatrix(&llantern.transform);
+	btVector3 llanternoffset(info.llantern_offset.x, info.llantern_offset.y, info.llantern_offset.z);
+	llanternoffset = llanternoffset.rotate(q.getAxis(), q.getAngle());
 
+	llantern.color = Black;
+	llantern.transform.M[12] += llanternoffset.getX();
+	llantern.transform.M[13] += llanternoffset.getY();
+	llantern.transform.M[14] += llanternoffset.getZ();
+
+	Cube rlantern(info.rlantern_size.x, info.rlantern_size.y, info.rlantern_size.z);
+	vehicle->getChassisWorldTransform().getOpenGLMatrix(&rlantern.transform);
+	btVector3 rlanternoffset(info.rlantern_offset.x, info.rlantern_offset.y, info.rlantern_offset.z);
+	rlanternoffset = rlanternoffset.rotate(q.getAxis(), q.getAngle());
+
+	rlantern.color = Black;
+	rlantern.transform.M[12] += rlanternoffset.getX();
+	rlantern.transform.M[13] += rlanternoffset.getY();
+	rlantern.transform.M[14] += rlanternoffset.getZ();
+
+	Cube cabin(info.cabin_size.x, info.cabin_size.y, info.cabin_size.z);
+	vehicle->getChassisWorldTransform().getOpenGLMatrix(&cabin.transform);
+	btVector3 cabinoffset(info.cabin_offset.x, info.cabin_offset.y, info.cabin_offset.z);
+	cabinoffset = cabinoffset.rotate(q.getAxis(), q.getAngle());
+
+	cabin.color = Red;
+	cabin.transform.M[12] +=cabinoffset.getX();
+	cabin.transform.M[13] += cabinoffset.getY();
+	cabin.transform.M[14] += cabinoffset.getZ();
+
+	cabin.Render();
 	chassis.Render();
+	llantern.Render();
+	rlantern.Render();
 }
 
 // ----------------------------------------------------------------------------
