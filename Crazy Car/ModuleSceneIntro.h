@@ -32,10 +32,7 @@ public:
 	void CreateRamp(const float& x, const float& y, const float& z, const float& inclination, const float& rotation);
 
 	void Angles2AxisAngle(const float& alpha_x, const float& beta_y, vec3& u, float& angle);
-	//void CreateRoad();
-
-	//void CreateCurve(float angle, float radiusC, int type);
-
+	
 	void CreateTrack();
 
 	void PrintText(float x, float y, float z, Color color, const char* string)
@@ -51,14 +48,7 @@ public:
 	}
 
 public:
-	/*
-	PhysBody3D* pb_snake[MAX_SNAKE];
-	Sphere s_snake[MAX_SNAKE];
-
-	PhysBody3D* pb_snake2[MAX_SNAKE];
-	Sphere s_snake2[MAX_SNAKE];
-	*/
-
+	
 	PhysBody3D* pb_chassis;
 	Cube p_chassis;
 
@@ -85,7 +75,15 @@ public:
 	bool win;
 	bool started;
 
+	bool check1Trigger;
+
 	p2DynArray <Cube*> map;
 	p2DynArray<Sphere*> pendulumBall_shape;
 	p2DynArray<PhysBody3D*> pendulumBall_body;
+
+	PhysBody3D* check_goal;
+	Cube c_goal;
+
+	PhysBody3D* check_1;
+	Cube c_1;
 };

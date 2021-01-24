@@ -115,6 +115,13 @@ Cube::Cube(float sizeX, float sizeY, float sizeZ) : Primitive(), size(sizeX, siz
 	type = PrimitiveTypes::Primitive_Cube;
 }
 
+void Cube::Size(float x, float y, float z)
+{
+	size.x = x;
+	size.y = y;
+	size.z = z;
+}
+
 void Cube::InnerRender() const
 {	
 	float sx = size.x * 0.5f;

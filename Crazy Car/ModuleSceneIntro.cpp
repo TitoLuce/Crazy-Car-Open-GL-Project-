@@ -3,6 +3,9 @@
 #include "ModuleSceneIntro.h"
 #include "Primitive.h"
 #include "PhysBody3D.h"
+#include "PhysVehicle3D.h"
+
+#include "ModulePlayer.h"
 
 ModuleSceneIntro::ModuleSceneIntro(Application* app, bool start_enabled) : Module(app, start_enabled)
 {
@@ -24,6 +27,8 @@ bool ModuleSceneIntro::Start()
 	win = false;
 	started = false;
 
+	check1Trigger = false;
+
 	CreateTrack();
 
 	CreatePendulum(25, 60);
@@ -44,6 +49,20 @@ bool ModuleSceneIntro::Start()
 
 	CreateRamp(-90, 0.6, 60, -45, 0);
 	CreateRamp(-110, 0.6, -20, -45, 0);
+
+	c_goal.Size(40, 2, 1);
+	check_goal = App->physics->AddBody(c_goal, 0);
+	check_goal->SetPos(10, 2, 0);
+	check_goal->GetTransform(&c_goal.transform);
+	check_goal->SetAsSensor(true);
+	check_goal->collision_listeners.add(this);
+
+	c_1.Size(40, 2, 1);
+	check_1 = App->physics->AddBody(c_1, 0);
+	check_1->SetPos(-100, 2, 0);
+	check_1->GetTransform(&c_1.transform);
+	check_1->SetAsSensor(true);
+	check_1->collision_listeners.add(this);
 
 	return ret;
 }
@@ -79,6 +98,11 @@ update_status ModuleSceneIntro::Update(float dt)
 	Plane p(0, 1, 0, 0);
 	p.axis = true;
 	p.Render();
+
+	if (laps > 3)
+	{
+		// WINCON
+	}
 
 	for (int i = 0; i < primitives.Count(); i++)
 	{
@@ -117,6 +141,21 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
+	if (body2 == App->player->vehicle)
+	{
+		if (body1 == check_goal)
+		{
+			if (check1Trigger == true)
+			{
+				laps++;
+				check1Trigger = false;
+			}
+		}
+		else if (body1 == check_1)
+		{
+			check1Trigger = true;
+		}
+	}
 }
 
 void ModuleSceneIntro::CreateTrack()

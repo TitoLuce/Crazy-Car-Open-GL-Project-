@@ -4,6 +4,7 @@
 #include "Primitive.h"
 #include "PhysVehicle3D.h"
 #include "PhysBody3D.h"
+#include "ModuleSceneIntro.h"
 
 ModulePlayer::ModulePlayer(Application* app, bool start_enabled) : Module(app, start_enabled), vehicle(NULL)
 {
@@ -104,6 +105,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
+	vehicle->collision_listeners.add(this);
 	vehicle->SetPos(9, 0, 0);
 	
 	return true;
@@ -156,6 +158,7 @@ update_status ModulePlayer::Update(float dt)
 			App->scene_intro->started = false;
 			App->scene_intro->seconds = 300;
 			App->scene_intro->laps = 1;
+			App->scene_intro->check1Trigger = false;
 			vehicle->SetPos(9, 0, 0);
 			mat4x4 restarter;
 			vehicle->GetTransform(&restarter);
