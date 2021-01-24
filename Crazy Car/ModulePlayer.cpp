@@ -126,31 +126,34 @@ update_status ModulePlayer::Update(float dt)
 
 	if (App->scene_intro->started)
 	{
-		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		if (!App->scene_intro->win && App->scene_intro->seconds > 0)
 		{
-			acceleration = MAX_ACCELERATION * 1.5;
-		}
+			if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+			{
+				acceleration = MAX_ACCELERATION * 1.5;
+			}
 
-		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		{
-			if (turn < TURN_DEGREES)
-				turn += TURN_DEGREES;
-		}
+			if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+			{
+				if (turn < TURN_DEGREES)
+					turn += TURN_DEGREES;
+			}
 
-		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		{
-			if (turn > -TURN_DEGREES)
-				turn -= TURN_DEGREES;
-		}
+			if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+			{
+				if (turn > -TURN_DEGREES)
+					turn -= TURN_DEGREES;
+			}
 
-		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
-		{
-			brake = BRAKE_POWER;
-		}
+			if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+			{
+				brake = BRAKE_POWER;
+			}
 
-		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		{
-			acceleration = -MAX_ACCELERATION / 2;
+			if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+			{
+				acceleration = -MAX_ACCELERATION / 2;
+			}
 		}
 
 		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)

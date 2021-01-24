@@ -101,7 +101,8 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	if (laps > 3)
 	{
-		// WINCON
+		win = true;
+		laps = 3;
 	}
 
 	for (int i = 0; i < primitives.Count(); i++)
@@ -128,12 +129,13 @@ update_status ModuleSceneIntro::Update(float dt)
 
 	sprintf_s(timer, 10, "Time: %03d", (int)seconds);
 	sprintf_s(lap, 10, "Lap: %d/3", laps);
-	if (seconds > 0)
+	if (seconds > 0 && !win)
 	{
 		PrintText(App->player->GetX(), App->player->GetY() + 25.0f, App->player->GetZ(), White, timer);
 		PrintText(App->player->GetX(), App->player->GetY() + 22.0f, App->player->GetZ(), White, lap);
 	}
-	else { PrintText(App->player->GetX(), App->player->GetY() + 23.0f, App->player->GetZ(), White, "GAME OVER"); }
+	else if (!win) { PrintText(App->player->GetX(), App->player->GetY() + 23.0f, App->player->GetZ(), White, "GAME OVER"); }
+	if (win) { PrintText(App->player->GetX(), App->player->GetY() + 23.0f, App->player->GetZ(), White, "YOU WIN! PRESS R TO RESTART"); }
 	
 
 	return UPDATE_CONTINUE;
@@ -141,19 +143,22 @@ update_status ModuleSceneIntro::Update(float dt)
 
 void ModuleSceneIntro::OnCollision(PhysBody3D* body1, PhysBody3D* body2)
 {
-	if (body2 == App->player->vehicle)
+	if (!win && seconds > 0)
 	{
-		if (body1 == check_goal)
+		if (body2 == App->player->vehicle)
 		{
-			if (check1Trigger == true)
+			if (body1 == check_goal)
 			{
-				laps++;
-				check1Trigger = false;
+				if (check1Trigger == true)
+				{
+					laps++;
+					check1Trigger = false;
+				}
 			}
-		}
-		else if (body1 == check_1)
-		{
-			check1Trigger = true;
+			else if (body1 == check_1)
+			{
+				check1Trigger = true;
+			}
 		}
 	}
 }
