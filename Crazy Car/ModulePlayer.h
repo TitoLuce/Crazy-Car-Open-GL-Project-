@@ -24,7 +24,7 @@ public:
 	float GetZ();
 
 public:
-
+	//VehicleInfo car;
 	PhysVehicle3D* vehicle;
 	float turn;
 	float acceleration;

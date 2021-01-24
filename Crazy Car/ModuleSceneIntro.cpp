@@ -22,6 +22,7 @@ bool ModuleSceneIntro::Start()
 	seconds = 300;
 	laps = 1;
 	win = false;
+	started = false;
 
 	CreateTrack();
 
@@ -57,6 +58,17 @@ bool ModuleSceneIntro::CleanUp()
 
 update_status ModuleSceneIntro::PreUpdate(float dt)
 {
+	if (!started)
+	{
+		App->camera->camMode = 2;
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			started = true;
+			App->camera->camMode = 1;
+		}
+		return UPDATE_CONTINUE;
+	}
+
 	if (seconds > 0 && !win) { seconds -= dt; }
 
 	return UPDATE_CONTINUE;
@@ -83,7 +95,12 @@ update_status ModuleSceneIntro::Update(float dt)
 		pendulumBall_shape[i]->Render();
 	}
 
-	//PrintText(App->player->GetX(), App->player->GetY() + 7.0f, App->player->GetZ(), White, "TIME:");
+	if (!started)
+	{ 
+		PrintText(App->player->GetX() + 22, App->player->GetY() + 50.0f, App->player->GetZ() + 80, White, "Welcome to Crazy Car");
+		PrintText(App->player->GetX() + 20, App->player->GetY() + 25.0f, App->player->GetZ() + 70, White, "Press Enter to start");
+		return UPDATE_CONTINUE;
+	}
 
 	sprintf_s(timer, 10, "Time: %03d", (int)seconds);
 	sprintf_s(lap, 10, "Lap: %d/3", laps);
@@ -109,13 +126,13 @@ void ModuleSceneIntro::CreateTrack()
 
 	//Inner walls
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(XPos, 5.0f, ZPos);
-		ZPos += Radius + Radius + Radius / 2;
+		ZPos += Radius + Radius / 2;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -125,13 +142,13 @@ void ModuleSceneIntro::CreateTrack()
 	float centerZ = ZPos - 5;
 	float ang = 0.0f;
 
-	for (int n = 0; n < 20; n++)
+	for (int n = 0; n < 30; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(centerX + 35 * (-cos(DEGTORAD * ang)), 5.0f, centerZ + 35 * sin(DEGTORAD * ang));
-		ang += 9.0f;
+		ang += 6.0f;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -140,13 +157,13 @@ void ModuleSceneIntro::CreateTrack()
 	XPos = -80.0f;
 	ZPos = -100.0f;
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(XPos, 5.0f, ZPos);
-		ZPos += Radius + Radius + Radius / 2;
+		ZPos += Radius + Radius / 2;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -156,13 +173,13 @@ void ModuleSceneIntro::CreateTrack()
 	centerZ = -95;
 	ang=0;
 
-	for (int n = 0; n < 20; n++)
+	for (int n = 0; n < 30; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(centerX + 35 * cos(DEGTORAD * ang), 5.0f, centerZ + 35 * -sin(DEGTORAD * ang));
-		ang += 9.0f;
+		ang += 6.0f;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -172,13 +189,13 @@ void ModuleSceneIntro::CreateTrack()
 	XPos = 30.0f;
 	ZPos = -100.0f;
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(XPos, 5.0f, ZPos);
-		ZPos += Radius + Radius + Radius / 2;
+		ZPos += Radius + Radius / 2;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -188,13 +205,13 @@ void ModuleSceneIntro::CreateTrack()
 	centerZ = ZPos - 5;
 	ang = 0.0f;
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(centerX + 75 * (-cos(DEGTORAD * ang)), 5.0f, centerZ + 75 * sin(DEGTORAD * ang));
-		ang += 4.5f;
+		ang += 3.0f;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -203,13 +220,13 @@ void ModuleSceneIntro::CreateTrack()
 	XPos = -120.0f;
 	ZPos = -100.0f;
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(XPos, 5.0f, ZPos);
-		ZPos += Radius + Radius + Radius / 2;
+		ZPos += Radius + Radius / 2;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);
@@ -219,13 +236,13 @@ void ModuleSceneIntro::CreateTrack()
 	centerZ = -95;
 	ang = 0;
 
-	for (int n = 0; n < 40; n++)
+	for (int n = 0; n < 60; n++)
 	{
 		Cylinder* s = new Cylinder(Radius, Height);
 		s->SetRotation(90, vec3(0, 0, 1));
 
 		s->SetPos(centerX + 75 * cos(DEGTORAD * ang), 5.0f, centerZ + 75 * -sin(DEGTORAD * ang));
-		ang += 4.5f;
+		ang += 3.0f;
 		s->body = App->physics->AddBody(*s, 0.0f);
 		s->color = { 0.5,0.5,0,1 };
 		primitives.PushBack(s);

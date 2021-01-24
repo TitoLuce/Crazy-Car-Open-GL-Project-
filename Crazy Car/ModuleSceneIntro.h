@@ -83,6 +83,7 @@ public:
 	char lap[10] = { "\0" };
 
 	bool win;
+	bool started;
 
 	p2DynArray <Cube*> map;
 	p2DynArray<Sphere*> pendulumBall_shape;

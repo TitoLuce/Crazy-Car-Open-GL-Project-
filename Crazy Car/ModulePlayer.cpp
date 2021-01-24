@@ -25,11 +25,11 @@ bool ModulePlayer::Start()
 	car.rlantern_size.Set(1, 1, 1);
 	car.rlantern_offset.Set(-1.2, 1.2, 3);
 
-	car.cabin_size.Set(2, 1, 1);
+	car.cabin_size.Set(3, 1, 1);
 	car.cabin_offset.Set(0, 2.4, 1.6);
 
 	// Car properties ----------------------------------------
-	car.chassis_size.Set(2, 1.6, 4);
+	car.chassis_size.Set(3, 1.6, 4);
 	car.chassis_offset.Set(0, 1.5, 0);
 	car.mass = 500.0f;
 	car.suspensionStiffness = 15.88f;
@@ -49,7 +49,7 @@ bool ModulePlayer::Start()
 	float half_width = car.chassis_size.x*0.7f;
 	float half_length = car.chassis_size.z*0.5f;
 	
-	vec3 direction(0,-1,0);
+	vec3 direction(0, -1, 0);
 	vec3 axis(-1,0,0);
 	
 	car.num_wheels = 4;
@@ -104,7 +104,7 @@ bool ModulePlayer::Start()
 	car.wheels[3].steering = false;
 
 	vehicle = App->physics->AddVehicle(car);
-	vehicle->SetPos(9, 10, 0);
+	vehicle->SetPos(9, 0, 0);
 	
 	return true;
 }
@@ -122,31 +122,47 @@ update_status ModulePlayer::Update(float dt)
 {
 	turn = acceleration = brake = 0.0f;
 
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+	if (App->scene_intro->started)
 	{
-		acceleration = MAX_ACCELERATION*1.5;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
+		{
+			acceleration = MAX_ACCELERATION * 1.5;
+		}
 
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-	{
-		if(turn < TURN_DEGREES)
-			turn +=  TURN_DEGREES;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
+		{
+			if (turn < TURN_DEGREES)
+				turn += TURN_DEGREES;
+		}
 
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-	{
-		if(turn > -TURN_DEGREES)
-			turn -= TURN_DEGREES;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
+		{
+			if (turn > -TURN_DEGREES)
+				turn -= TURN_DEGREES;
+		}
 
-	if(App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
-	{
-		brake = BRAKE_POWER;
-	}
+		if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+		{
+			brake = BRAKE_POWER;
+		}
 
-	if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-	{
-		acceleration = -MAX_ACCELERATION / 2;
+		if (App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
+		{
+			acceleration = -MAX_ACCELERATION / 2;
+		}
+
+		if (App->input->GetKey(SDL_SCANCODE_R) == KEY_DOWN)
+		{
+			App->scene_intro->started = false;
+			App->scene_intro->seconds = 300;
+			App->scene_intro->laps = 1;
+			vehicle->SetPos(9, 0, 0);
+			mat4x4 restarter;
+			vehicle->GetTransform(&restarter);
+			restarter.rotate(360, vec3(0, 1, 0));
+			vehicle->SetTransform(&restarter);
+			vehicle->vehicle->getRigidBody()->setLinearVelocity(btVector3(0, 0, 0));
+		}
 	}
 
 	vehicle->ApplyEngineForce(acceleration);
